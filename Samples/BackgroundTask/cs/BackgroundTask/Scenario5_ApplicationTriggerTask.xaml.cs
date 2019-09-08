@@ -52,11 +52,11 @@ namespace SDKTemplate
                 {
                     AttachProgressAndCompletedHandlers(task.Value);
                     BackgroundTaskSample.UpdateBackgroundTaskRegistrationStatus(BackgroundTaskSample.ApplicationTriggerTaskName, true);
+                    trigger = new ApplicationTrigger();
                     break;
                 }
             }
 
-            trigger = new ApplicationTrigger();
             UpdateUI();
         }
 
@@ -67,6 +67,7 @@ namespace SDKTemplate
         /// <param name="e"></param>
         private void RegisterBackgroundTask(object sender, RoutedEventArgs e)
         {
+            trigger = new ApplicationTrigger();
             var task = BackgroundTaskSample.RegisterBackgroundTask(BackgroundTaskSample.SampleBackgroundTaskEntryPoint,
                                                                    BackgroundTaskSample.ApplicationTriggerTaskName,
                                                                    trigger,
@@ -84,6 +85,7 @@ namespace SDKTemplate
         {
             BackgroundTaskSample.UnregisterBackgroundTasks(BackgroundTaskSample.ApplicationTriggerTaskName);
             BackgroundTaskSample.ApplicationTriggerTaskResult = "";
+            trigger = null;
             UpdateUI();
         }
 
@@ -149,7 +151,7 @@ namespace SDKTemplate
             {
                 RegisterButton.IsEnabled = !BackgroundTaskSample.ApplicationTriggerTaskRegistered;
                 UnregisterButton.IsEnabled = BackgroundTaskSample.ApplicationTriggerTaskRegistered;
-                SignalButton.IsEnabled = BackgroundTaskSample.ApplicationTriggerTaskRegistered & (trigger != null);
+                SignalButton.IsEnabled = BackgroundTaskSample.ApplicationTriggerTaskRegistered && (trigger != null);
                 Progress.Text = BackgroundTaskSample.ApplicationTriggerTaskProgress;
                 Result.Text = BackgroundTaskSample.ApplicationTriggerTaskResult;
                 Status.Text = BackgroundTaskSample.GetBackgroundTaskStatus(BackgroundTaskSample.ApplicationTriggerTaskName);

@@ -43,11 +43,11 @@ Namespace Global.SDKTemplate
                 If task.Value.Name = BackgroundTaskSample.ApplicationTriggerTaskName Then
                     AttachProgressAndCompletedHandlers(task.Value)
                     BackgroundTaskSample.UpdateBackgroundTaskRegistrationStatus(BackgroundTaskSample.ApplicationTriggerTaskName, True)
+                    trigger = New ApplicationTrigger()
                     Exit For
                 End If
             Next
 
-            trigger = New ApplicationTrigger()
             UpdateUI()
         End Sub
 
@@ -57,6 +57,7 @@ Namespace Global.SDKTemplate
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
         Private Sub RegisterBackgroundTask(sender As Object, e As RoutedEventArgs)
+            trigger = New ApplicationTrigger()
             Dim task = BackgroundTaskSample.RegisterBackgroundTask(BackgroundTaskSample.SampleBackgroundTaskEntryPoint, BackgroundTaskSample.ApplicationTriggerTaskName, trigger, Nothing)
             AttachProgressAndCompletedHandlers(task)
             UpdateUI()
@@ -70,6 +71,7 @@ Namespace Global.SDKTemplate
         Private Sub UnregisterBackgroundTask(sender As Object, e As RoutedEventArgs)
             BackgroundTaskSample.UnregisterBackgroundTasks(BackgroundTaskSample.ApplicationTriggerTaskName)
             BackgroundTaskSample.ApplicationTriggerTaskResult = ""
+            trigger = Nothing
             UpdateUI()
         End Sub
 

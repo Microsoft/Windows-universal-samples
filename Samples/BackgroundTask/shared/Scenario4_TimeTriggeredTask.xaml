@@ -24,9 +24,9 @@
                 <StackPanel>
                     <TextBlock Text="Description:" Style="{StaticResource SampleHeaderTextStyle}"/>
                     <TextBlock Style="{StaticResource ScenarioDescriptionTextStyle}" TextWrapping="Wrap">
-                        Registers a background task for a time trigger event and adds the
-                        application to the lock screen. The background task runs every 15 mins
-                        provided the app is on the lock screen.
+                        Registers a background task for a time trigger event and requests
+                        background access. The background task runs every 15 mins
+                        provided the app has background access.
                     </TextBlock>
                     <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Margin="0,10,0,10">
                         <Button x:Name="RegisterButton" Content="Register" Click="RegisterBackgroundTask" Margin="0,0,10,0"/>

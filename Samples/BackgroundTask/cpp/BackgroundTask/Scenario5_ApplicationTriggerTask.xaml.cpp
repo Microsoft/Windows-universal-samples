@@ -51,11 +51,11 @@ void ApplicationTriggerTask::OnNavigatedTo(NavigationEventArgs^ e)
         {
             BackgroundTaskSample::UpdateBackgroundTaskRegistrationStatus(task->Name, true);
             AttachProgressAndCompletedHandlers(task);
+            trigger = ref new ApplicationTrigger();
             break;
         }
     }
 
-    trigger = ref new ApplicationTrigger();
     UpdateUI();
 }
 
@@ -76,6 +76,7 @@ void ApplicationTriggerTask::AttachProgressAndCompletedHandlers(IBackgroundTaskR
 /// <param name="e"></param>
 void ApplicationTriggerTask::RegisterBackgroundTask(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
+    trigger = ref new ApplicationTrigger();
     auto task = BackgroundTaskSample::RegisterBackgroundTask(SampleBackgroundTaskEntryPoint,
                                                              ApplicationTriggerTaskName,
                                                              trigger,
@@ -93,6 +94,7 @@ void ApplicationTriggerTask::UnregisterBackgroundTask(Platform::Object^ sender, 
 {
     BackgroundTaskSample::UnregisterBackgroundTasks(ApplicationTriggerTaskName);
     BackgroundTaskSample::ApplicationTriggerTaskResult = "";
+    trigger = nullptr;
     UpdateUI();
 }
 
@@ -153,7 +155,7 @@ void ApplicationTriggerTask::UpdateUI()
     {
         RegisterButton->IsEnabled = !BackgroundTaskSample::ApplicationTriggerTaskRegistered;
         UnregisterButton->IsEnabled = BackgroundTaskSample::ApplicationTriggerTaskRegistered;
-        SignalButton->IsEnabled = BackgroundTaskSample::ApplicationTriggerTaskRegistered & (trigger != nullptr);
+        SignalButton->IsEnabled = BackgroundTaskSample::ApplicationTriggerTaskRegistered && (trigger != nullptr);
         Progress->Text = BackgroundTaskSample::ApplicationTriggerTaskProgress;
         Result->Text = BackgroundTaskSample::ApplicationTriggerTaskResult;
         Status->Text = BackgroundTaskSample::GetBackgroundTaskStatus(ApplicationTriggerTaskName);
