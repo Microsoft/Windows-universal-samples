@@ -25,7 +25,50 @@
                 <TextBlock Style="{StaticResource ScenarioDescriptionTextStyle}" TextWrapping="Wrap">
                     Shows the default appointments provider app at a particular time and date.
                 </TextBlock>
-                <Button x:Name="ShowTimeFrameButton" Content="Show 24 hours from now" Margin="0,10,0,0" Click="Show_Click"/>
+                <Button x:Name="ShowTimeFrameButton" Content="Show Calendar View of 24 hours from now" Margin="0,10,0,0" Click="Show_Click"/>
+
+                <TextBlock Padding="30" FontSize="30">List of Calendar events 24 hours from now</TextBlock>
+                <GridView ItemsSource="{Binding Appointments}"
+                  IsItemClickEnabled="True"
+                  IsSwipeEnabled="true"
+                  SelectionMode="Single">
+                    <GridView.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="300"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="Subject"/>
+                                <TextBlock Grid.Column="1" Text="StartTime"/>
+                                <TextBlock Grid.Column="2" Text="Duration"/>
+                                <TextBlock Grid.Column="3" Text="AllDay?"/>
+                            </Grid>
+                        </DataTemplate>  
+                    </GridView.HeaderTemplate>
+               
+                    <GridView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="300"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="{Binding Subject}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding StartTime}"/>
+                                <TextBlock Grid.Column="2" Text="{Binding Duration}"/>
+                                <TextBlock Grid.Column="3" Text="{Binding AllDay}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+
             </StackPanel>
         </Grid>
     </Grid>
