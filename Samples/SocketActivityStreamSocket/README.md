@@ -60,7 +60,7 @@ to remove the loopback restrictions for testing and debugging purposes.
 
 **Client:** Windows 10
 
-**Server:** Windows Server 2016 Technical Preview
+**Server:** Windows Server 2016 Technical Preview, Windows 10 IoT Core
 
 **Phone:** Windows 10
 
