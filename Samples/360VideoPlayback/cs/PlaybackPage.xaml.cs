@@ -23,8 +23,8 @@ namespace _360VideoPlayback
     public sealed partial class PlaybackPage : Page
     {
         private MediaPlayer mediaPlayer;
-        // positions hold the center of the window
-        private double centerX = 0, centerY = 0;
+        // positions hold the start of the movement
+        private Point origin;
         // MTC grid to ignore mouse event on the MTC Panel
         Grid mtcGrid = null;
         private double pitch = 0, heading = 0;
@@ -48,8 +48,6 @@ namespace _360VideoPlayback
 
         private void PlaybackPage_LayoutUpdated(object sender, object e)
         {
-            centerX = VideoElement.ActualWidth / 2;
-            centerY = VideoElement.ActualHeight / 2;
             if (mtcGrid == null)
             {
                 FrameworkElement transportControlsTemplateRoot = (FrameworkElement)VisualTreeHelper.GetChild(VideoElement.TransportControls, 0);
@@ -150,20 +148,25 @@ namespace _360VideoPlayback
             }
         }
 
+        private double PixelToAngle(double pixel) => pixel * videoProjection.HorizontalFieldOfViewInDegrees / VideoElement.ActualWidth;
+
         private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
             if (e.OriginalSource != mtcGrid && isPointerPress)
             {
-                double ChangeX = e.GetCurrentPoint(VideoElement).Position.X - centerX;
-                double ChangeY = centerY - e.GetCurrentPoint(VideoElement).Position.Y;
-                videoProjection.ViewOrientation = Helpers.CreateFromHeadingPitchRoll(ChangeX, ChangeY, 0);
+                var current = e.GetCurrentPoint(VideoElement).Position;
+
+                heading += PixelToAngle(origin.X - current.X);
+                pitch += PixelToAngle(current.Y - origin.Y);
+                videoProjection.ViewOrientation = Helpers.CreateFromHeadingPitchRoll(heading, pitch, 0);
+                origin = current;
             }
             e.Handled = true;
         }
 
         private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            ResetState();
+            isPointerPress = false;
             e.Handled = true;
         }
 
@@ -172,6 +175,7 @@ namespace _360VideoPlayback
             if (e.OriginalSource != mtcGrid && IsMediaAlreadyOpened())
             {
                 isPointerPress = true;
+                origin = e.GetCurrentPoint(VideoElement).Position;
             }
             e.Handled = true;
         }

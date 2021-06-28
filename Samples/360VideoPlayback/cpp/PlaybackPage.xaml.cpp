@@ -60,8 +60,6 @@ quaternion CreateFromHeadingPitchRoll(double flHeading, double flPitch, double f
 
 PlaybackPage::PlaybackPage()
 {
-    m_centerX = 0;
-    m_centerY = 0;
     m_pitch = 0;
     m_heading = 0;
     m_rotationdelta = 1.8f;
@@ -72,8 +70,6 @@ PlaybackPage::PlaybackPage()
 
 void PlaybackPage::OnLayoutUpdated(Object^ sender, Object^ args)
 {
-    m_centerX = this->VideoElement->ActualWidth / 2;
-    m_centerY = this->VideoElement->ActualHeight / 2;
     if (this->m_mtcGrid == nullptr)
     {
         FrameworkElement^ transportControlsTemplateRoot = (FrameworkElement^)(VisualTreeHelper::GetChild(this->VideoElement->TransportControls, 0));
@@ -105,6 +101,7 @@ void PlaybackPage::OnPointerPressed(Object^ sender, PointerRoutedEventArgs^ e)
     if (e->OriginalSource != m_mtcGrid && IsMediaAlreadyOpened())
     {
         m_isPointerPress = true;
+		m_origin = e->GetCurrentPoint(VideoElement)->Position;
     }
     e->Handled = true;
 }
@@ -112,7 +109,7 @@ void PlaybackPage::OnPointerPressed(Object^ sender, PointerRoutedEventArgs^ e)
 
 void PlaybackPage::OnPointerReleased(Object^ sender, PointerRoutedEventArgs^ e)
 {
-    ResetState();
+    m_isPointerPress = false;
     e->Handled = true;
 }
 
@@ -132,14 +129,23 @@ void PlaybackPage::OnPointerWheelChanged(Object^ sender, PointerRoutedEventArgs^
 }
 
 
+float PlaybackPage::PixelToAngle(float pixel) const
+{
+	return float(pixel * videoProjection->HorizontalFieldOfViewInDegrees / VideoElement->ActualWidth);
+}
+
 void PlaybackPage::OnPointerMoved(Object^ sender, PointerRoutedEventArgs^ e)
 {
     if (e->OriginalSource != m_mtcGrid && m_isPointerPress)
     {
-        double ChangeX = e->GetCurrentPoint(this->VideoElement)->Position.X - m_centerX;
-        double ChangeY = m_centerY - (e->GetCurrentPoint(VideoElement)->Position.Y);
-        this->videoProjection->ViewOrientation = CreateFromHeadingPitchRoll(ChangeX, ChangeY, 0);
-    }
+        auto current = e->GetCurrentPoint(this->VideoElement)->Position;
+	
+		m_heading += PixelToAngle(m_origin.X - current.X);
+		m_pitch += PixelToAngle(current.Y - m_origin.Y);
+		
+		this->videoProjection->ViewOrientation = CreateFromHeadingPitchRoll(m_heading, m_pitch, 0);
+		m_origin = current;
+	}
     e->Handled = true;
 }
 

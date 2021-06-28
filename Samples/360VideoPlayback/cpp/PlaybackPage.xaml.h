@@ -25,8 +25,8 @@ namespace _360VideoPlayback
     private:
 
         Windows::Media::Playback::MediaPlayer^ m_player;
-        // positions hold the center of the window
-        double m_centerX = 0, m_centerY = 0;
+        // positions hold the origin of the movement
+		Windows::Foundation::Point m_origin;
         // MTC grid to ignore mouse event on the MTC Panel
         Windows::UI::Xaml::Controls::Grid^ m_mtcGrid;
         double m_pitch;
@@ -45,6 +45,7 @@ namespace _360VideoPlayback
         void ResetState();
         void StartInputLoop();
 
+		float PixelToAngle(float pixel) const;
         void OnPointerPressed(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
         Windows::Foundation::EventRegistrationToken OnPointerPressedToken;
         Windows::Foundation::EventRegistrationToken OnMTCPointerPressedToken;
