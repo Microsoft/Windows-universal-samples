@@ -304,6 +304,7 @@ namespace SimpleCommunication
                     LocalhostVideo.Source = new Uri("stsp://localhost");
                     LatencyModeToggle.IsEnabled = true;
                     LoopbackClientButton.IsEnabled = false;
+                    HiddenVideo.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
                     currentState = State.Streaming;
                 }
