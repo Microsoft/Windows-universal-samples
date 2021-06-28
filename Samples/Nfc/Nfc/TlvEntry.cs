@@ -61,18 +61,18 @@ public class TlvEntry
             {
                 return (int)((IBuffer)Value).Length;
             }
-            else if(Value is byte[])
+            else if (Value is byte[])
             {
                 return ((byte[])Value).Length;
             }
-            else if(Value is TlvEntry)
+            else if (Value is TlvEntry)
             {
                 return ((TlvEntry)Value).Length;
             }
             else if (Value is TlvEntry[])
             {
                 int ret = 0;
-                foreach(var entry in (TlvEntry[])Value)
+                foreach (var entry in (TlvEntry[])Value)
                 {
                     ret += entry.Length;
                 }
@@ -86,9 +86,34 @@ public class TlvEntry
     {
         get
         {
-            return TagLength 
-                + (ValueLength > 0x7F ? 2 : 1)
+            return TagLength
+                + LengthLength
                 + ValueLength;
+        }
+    }
+
+    int LengthLength
+    {
+        get
+        {
+            int moreLength = 0;
+
+            if (ValueLength > 0x7F)
+            {
+                int tmp = ValueLength;
+                while (tmp > 0)
+                {
+                    moreLength++;
+                    tmp = tmp >> 8;
+                }
+
+                if (moreLength > 4)
+                {
+                    throw new Exception("Length field exceeded max length.");
+                }
+            }
+
+            return 1 + moreLength;
         }
     }
 
@@ -96,7 +121,7 @@ public class TlvEntry
     {
         int i = 0;
         var ret = new byte[this.Length + (statusWord == null ? 0 : 2)];
-        
+
         if (TagLength == 2)
         {
             ret[i++] = (byte)((Tag & 0xFF00) >> 8);
@@ -107,15 +132,20 @@ public class TlvEntry
             ret[i++] = (byte)Tag;
         }
 
-        if (ValueLength > 0x7F)
+        int moreLength = LengthLength - 1;
+        if (moreLength == 0)
         {
-            if (ValueLength > 0xFF)
-            {
-                throw new NotImplementedException();
-            }
-            ret[i++] = 0x81;
+            ret[i++] = (byte)ValueLength;
         }
-        ret[i++] = (byte)ValueLength;
+        else
+        {
+            ret[i++] = (byte)(0x80 | moreLength);
+
+            while (moreLength > 0)
+            {
+                ret[i++] = (byte)(ValueLength >> (--moreLength * 8));
+            }
+        }
 
         if (Value is string)
         {

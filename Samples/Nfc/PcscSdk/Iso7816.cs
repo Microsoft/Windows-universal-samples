@@ -24,9 +24,9 @@ namespace Iso7816
     {
         public ApduCommand(byte cla, byte ins, byte p1, byte p2, byte[] commandData, byte? le)
         {
-            if (commandData != null && commandData.Length > 254)
+            if (commandData != null && commandData.Length > 0xFFFF)
             {
-                throw new NotImplementedException();
+                throw new Exception("CommandData exceeded max length.");
             }
             CLA = cla;
             INS = ins;
@@ -83,6 +83,11 @@ namespace Iso7816
 
                 if (CommandData != null && CommandData.Length > 0)
                 {
+                    if (CommandData.Length > 0xFF)
+                    {
+                        writer.WriteByte(0x00);
+                        writer.WriteByte((byte)(CommandData.Length >> 8));
+                    }
                     writer.WriteByte((byte)CommandData.Length);
                     writer.WriteBytes(CommandData);
                 }
@@ -170,13 +175,15 @@ namespace Iso7816
                         throw new Exception("Invalid length for TLV response");
 
                     valueLength = reader.ReadByte();
-                    lengthLength = 1;
 
                     if ((valueLength & TAG_LENGTH_MULTI_BYTE_MASK) == TAG_LENGTH_MULTI_BYTE_MASK)
-                        lengthLength += (valueLength & ~TAG_LENGTH_MULTI_BYTE_MASK);
+                    {
+                        lengthLength = 1 + (valueLength & ~TAG_LENGTH_MULTI_BYTE_MASK);
 
-                    while (--lengthLength > 0)
-                        valueLength = (valueLength << 8) | reader.ReadByte();
+                        valueLength = 0;
+                        while (--lengthLength > 0)
+                            valueLength = (valueLength << 8) | reader.ReadByte();
+                    }
 
                     while (valueLength != 0 && valueLength-- > 0)
                         value.WriteByte(reader.ReadByte());
