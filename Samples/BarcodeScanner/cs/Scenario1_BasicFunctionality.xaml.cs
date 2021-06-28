@@ -92,6 +92,9 @@ namespace SDKTemplate
                     // enable the scanner.
                     // The scanner must be enabled in order to receive the DataReceived event.
                     await claimedScanner.EnableAsync();
+                    
+                    // Begin scanning
+                    await claimedScanner.StartSoftwareTriggerAsync();
 
                     rootPage.NotifyUser("Ready to scan. Device ID: " + claimedScanner.DeviceId, NotifyType.StatusMessage);
                     ScenarioEndScanButton.IsEnabled = true;
