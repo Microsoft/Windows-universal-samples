@@ -30,6 +30,7 @@
     <ClCompile Include="Scenario10.xaml.cpp" />
     <ClCompile Include="Scenario11.xaml.cpp" />
     <ClCompile Include="Scenario12.xaml.cpp" />
+    <ClCompile Include="Scenario13.xaml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -49,6 +50,7 @@
     <ClInclude Include="Scenario10.xaml.h" />
     <ClInclude Include="Scenario11.xaml.h" />
     <ClInclude Include="Scenario12.xaml.h" />
+    <ClInclude Include="Scenario13.xaml.h" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
@@ -70,6 +72,7 @@
     <Page Include="..\shared\Scenario10.xaml" />
     <Page Include="..\shared\Scenario11.xaml" />
     <Page Include="..\shared\Scenario12.xaml" />
+    <Page Include="..\shared\Scenario13.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="$(SharedContentDir)\media\smalltile-sdk.png">

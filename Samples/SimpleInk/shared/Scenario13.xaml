@@ -1,0 +1,78 @@
+<!--
+    //*********************************************************
+    //
+    // Copyright (c) Microsoft. All rights reserved.
+    // This code is licensed under the MIT License (MIT).
+    // THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+    // ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+    // IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+    // PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+    //
+    //*********************************************************
+-->
+<Page
+    x:Class="SDKTemplate.Scenario13"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:SDKTemplate"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    SizeChanged="OnSizeChanged"
+    mc:Ignorable="d">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid x:Name="RootGrid" Margin="12,10,12,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                <TextBlock Style="{StaticResource SampleHeaderTextStyle}" Text="Description:" />
+                <TextBlock Style="{StaticResource ScenarioDescriptionTextStyle}" TextWrapping="Wrap">
+                    This scenario demonstrates selecting InkStrokes and Moving/Resizing them.<LineBreak />
+                    Select the Stroke selection tool, i.e. lasso, and select a drawn Stroke.
+                    When you hover over the Bounding Box your mouse pointer will change to represent the available Manipulation Options.<LineBreak />
+                </TextBlock>
+            </StackPanel>
+
+            <ScrollViewer
+                Grid.Row="1"
+                VerticalScrollBarVisibility="Auto"
+                VerticalScrollMode="Auto">
+                <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <InkToolbar TargetInkCanvas="{x:Bind inkCanvas}">
+                            <InkToolbarCustomToolButton
+                                x:Name="toolButtonLasso"
+                                Click="ToolButton_Lasso"
+                                ToolTipService.ToolTip="Selection tool">
+                                <SymbolIcon Symbol="{x:Bind LassoSelect}" />
+                            </InkToolbarCustomToolButton>
+                        </InkToolbar>
+                    </StackPanel>
+                    <ScrollViewer
+                        x:Name="scrollViewer"
+                        Grid.Row="1"
+                        HorizontalScrollBarVisibility="Auto"
+                        HorizontalScrollMode="Enabled"
+                        MinZoomFactor="1"
+                        VerticalScrollBarVisibility="Auto"
+                        VerticalScrollMode="Enabled"
+                        ZoomMode="Enabled">
+                        <Grid
+                            x:Name="outputGrid"
+                            Height="Auto"
+                            Background="{ThemeResource SystemControlBackgroundChromeWhiteBrush}">
+                            <!--  Inking area  -->
+                            <InkCanvas x:Name="inkCanvas" Height="Auto" />
+                            <Canvas x:Name="selectionCanvas" />
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Page>

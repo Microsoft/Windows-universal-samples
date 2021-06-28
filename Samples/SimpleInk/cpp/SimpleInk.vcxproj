@@ -175,6 +175,9 @@
     <ClInclude Include="Scenario12.xaml.h">
       <DependentUpon>..\shared\Scenario12.xaml</DependentUpon>
     </ClInclude>
+	<ClInclude Include="Scenario13.xaml.h">
+	  <DependentUpon>..\shared\Scenario13.xaml</DependentUpon>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="$(SharedContentDir)\xaml\App.xaml">
@@ -198,6 +201,7 @@
     <Page Include="..\shared\Scenario10.xaml" />
     <Page Include="..\shared\Scenario11.xaml" />
     <Page Include="..\shared\Scenario12.xaml" />
+	<Page Include="..\shared\Scenario13.xaml" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -256,6 +260,9 @@
     </ClCompile>
     <ClCompile Include="Scenario12.xaml.cpp">
       <DependentUpon>..\shared\Scenario12.xaml</DependentUpon>
+    </ClCompile>
+	<ClCompile Include="Scenario13.xaml.cpp">
+      <DependentUpon>..\shared\Scenario13.xaml</DependentUpon>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

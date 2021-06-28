@@ -49,6 +49,7 @@ namespace SDKTemplate
             {
                 itemCollection.Add(new Scenario { Title = $"{i++}) {s.Title}", ClassType = s.ClassType });
             }
+
             ScenarioControl.ItemsSource = itemCollection;
 
             if (Window.Current.Bounds.Width < 640)

@@ -107,6 +107,7 @@
     <Compile Include="Scenario1.xaml.cs">
       <DependentUpon>Scenario1.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Scenario13.xaml.cs" />
     <Compile Include="Scenario2.xaml.cs">
       <DependentUpon>Scenario2.xaml</DependentUpon>
     </Compile>
@@ -159,6 +160,11 @@
     </Page>
     <Page Include="..\shared\Scenario1.xaml">
       <Link>Scenario1.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\shared\Scenario13.xaml">
+      <Link>Scenario13.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
