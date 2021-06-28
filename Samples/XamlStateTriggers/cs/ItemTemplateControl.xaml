@@ -20,7 +20,7 @@
                 <VisualState>                   
                     <VisualState.StateTriggers>
                         <!-- This trigger is activated if the mainPanel's height is >=150 effective pixels -->
-                        <triggers:ControlSizeTrigger MinHeight="150" TargetElement="{x:Bind Path=mainPanel}" />
+                        <triggers:ControlSizeTrigger MinControlHeight="150" TargetElement="{x:Bind Path=mainPanel}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="mainPanel.Background" Value="Black" />
