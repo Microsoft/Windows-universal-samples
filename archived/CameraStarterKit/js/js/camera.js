@@ -138,7 +138,9 @@
             return oMediaCapture.initializeAsync(settings)
             .then(function () {
                 isInitialized = true;
-                startPreview();
+                // Get all available media stream properties and select the first one as default
+                var allProperties = oMediaCapture.videoDeviceController.getAvailableMediaStreamProperties(Capture.MediaStreamType.videoPreview);
+                startPreview(oMediaCapture, Capture.MediaStreamType.videoPreview, allProperties[0]);
             });
         }, function (error) {
             console.log(error.message);
@@ -207,9 +209,10 @@
     }
 
     /// <summary>
+    /// Sets encoding properties on a camera stream. Ensures VideoElement and preview stream are stopped before setting properties.
     /// Starts the preview and adjusts it for for rotation and mirroring after making a request to keep the screen on
     /// </summary>
-    function startPreview() {
+    function startPreview(mediaCapture, streamType, encodingProperties) {
         // Prevent the device from sleeping while the preview is running
         oDisplayRequest.requestActive();
 
@@ -219,15 +222,20 @@
             cameraPreview.style.transform = "scale(-1, 1)";
         }
 
-        var previewUrl = URL.createObjectURL(oMediaCapture);
-        previewVidTag.src = previewUrl;
-        previewVidTag.play();
+        // Apply desired stream properties
+        return mediaCapture.videoDeviceController.setMediaStreamPropertiesAsync(streamType, encodingProperties)
+            .then(function () {
+                // Recreate pipeline and restart the preview
+                previewVidTag = document.getElementById("cameraPreview");
+                var previewUrl = URL.createObjectURL(mediaCapture);
+                previewVidTag.src = previewUrl;
+                previewVidTag.play();
 
-        previewVidTag.addEventListener("playing", function () {
-            isPreviewing = true;
-            updateCaptureControls();
-            setPreviewRotationAsync();
-        });
+                previewVidTag.addEventListener("playing", function () {
+                    isPreviewing = true;
+                    updateCaptureControls();
+                });
+            });
     }
 
     /// <summary>
@@ -556,11 +564,29 @@
 
     function mediaCapture_failed(errorEventArgs) {
         console.log("MediaCapture_Failed: 0x" + errorEventArgs.code + ": " + errorEventArgs.message);
+        showErrorMessage(errorEventArgs.message);
 
         cleanupCameraAsync()
         .done(function() {
             updateCaptureControls();
         });    
+    }
+    
+    /// <summary>
+    /// Show error message when media capture failed
+    /// Click on try again button will re-initialize and have another try
+    /// </summary>
+    function showErrorMessage(errormessage) {
+        var msg = new Windows.UI.Popups.MessageDialog(
+            "Looks like your camera is being used by another app! If you need it, here's the error message: "
+            + errormessage);
+        msg.commands.append(new Windows.UI.Popups.UICommand(
+            "Try again",
+            function () {
+                initializeCameraAsync();
+            })
+        );
+        msg.showAsync();
     }
 
     app.start();
