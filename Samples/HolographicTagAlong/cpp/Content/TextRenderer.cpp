@@ -121,7 +121,7 @@ void TextRenderer::CreateDeviceDependentResources()
     // This is where we format the text that will be written on the render target.
     DX::ThrowIfFailed(
         m_deviceResources->GetDWriteFactory()->CreateTextFormat(
-            L"Consolas",
+            L"Segoe UI",
             NULL,
             DWRITE_FONT_WEIGHT_NORMAL,
             DWRITE_FONT_STYLE_NORMAL,
