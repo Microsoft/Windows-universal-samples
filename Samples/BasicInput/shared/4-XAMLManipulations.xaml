@@ -51,7 +51,11 @@
             <ToggleSwitch x:Name="inertiaSwitch" Header="Inertia" Margin="0,12,0,0" Toggled="InertiaSwitch_Toggled"/>
             <Button x:Name="resetButton" Content="Reset" Margin="0,12,0,0" Click="resetButton_Pressed"/>
             <Canvas ManipulationMode="None" Margin="0,12,0,0" MinHeight="400">
-                <Border x:Name="manipulateMe" Background="LightGray" Height="200" Width="200"  ManipulationMode="All" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Border x:Name="manipulateMe" Background="LightGray" Height="200" Width="200"  ManipulationMode="All" 
+                        Canvas.Top="100" Canvas.Left="100" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Ellipse Height="10" Width="10" Fill="Yellow">
+                    </Ellipse>
+                </Border>
             </Canvas>
         </StackPanel>
     </ScrollViewer>

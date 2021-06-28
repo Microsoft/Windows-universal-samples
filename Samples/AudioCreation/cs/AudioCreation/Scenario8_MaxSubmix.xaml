@@ -1,0 +1,138 @@
+﻿<!--
+//*********************************************************
+//
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+//*********************************************************
+-->
+<Page
+    x:Class="AudioCreation.Scenario8_MaxSubmix"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AudioCreation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="fileButton2.(RelativePanel.AlignLeftWith)" Value="fileButton1" />
+                        <Setter Target="fileButton2.(RelativePanel.Below)" Value="fileButton1" />
+                        <Setter Target="audioPipe1.(RelativePanel.RightOf)" Value="fileButton1" />
+                        <Setter Target="audioPipe1.(RelativePanel.AlignVerticalCenterWith)" Value="fileButton1" />
+                        <Setter Target="audioPipe2.(RelativePanel.RightOf)" Value="fileButton2" />
+                        <Setter Target="audioPipe2.(RelativePanel.AlignVerticalCenterWith)" Value="fileButton2" />
+                        <Setter Target="submixNodeContainer.(RelativePanel.RightOf)" Value="audioPipe1" />
+                        <Setter Target="submixNodeContainer.(RelativePanel.AlignTopWith)" Value="fileButton1" />
+                        <!--Output device is to the right of submix node-->
+                        <Setter Target="audioPipe3.Height" Value="10" />
+                        <Setter Target="audioPipe3.Width" Value="80" />
+                        <Setter Target="audioPipe3.Margin" Value="0,20,0,0" />
+                        <Setter Target="audioPipe3.(RelativePanel.RightOf)" Value="submixNodeContainer" />
+                        <Setter Target="audioPipe3.(RelativePanel.AlignVerticalCenterWith)" Value="submixNodeContainer" />
+                        <Setter Target="speakerContainer.Margin" Value="0,20,0,0" />
+                        <Setter Target="speakerContainer.(RelativePanel.RightOf)" Value="audioPipe3" />
+                        <Setter Target="speakerContainer.(RelativePanel.AlignVerticalCenterWith)" Value="audioPipe3" />
+                        <Setter Target="graphButton.Margin" Value="0,90,0,0" />
+                        <Setter Target="graphButton.(RelativePanel.Below)" Value="speakerContainer" />
+                        <Setter Target="graphButton.(RelativePanel.AlignHorizontalCenterWith)" Value="audioPipe1" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="fileButton2.(RelativePanel.AlignLeftWith)" Value="fileButton1" />
+                        <Setter Target="fileButton2.(RelativePanel.Below)" Value="fileButton1" />
+                        <Setter Target="audioPipe1.(RelativePanel.RightOf)" Value="fileButton1" />
+                        <Setter Target="audioPipe1.(RelativePanel.AlignVerticalCenterWith)" Value="fileButton1" />
+                        <Setter Target="audioPipe2.(RelativePanel.RightOf)" Value="fileButton2" />
+                        <Setter Target="audioPipe2.(RelativePanel.AlignVerticalCenterWith)" Value="fileButton2" />
+                        <Setter Target="submixNodeContainer.(RelativePanel.RightOf)" Value="audioPipe1" />
+                        <Setter Target="submixNodeContainer.(RelativePanel.AlignTopWith)" Value="fileButton1" />
+                        <!--Output device is below submix node-->
+                        <Setter Target="audioPipe3.Height" Value="80" />
+                        <Setter Target="audioPipe3.Width" Value="10" />
+                        <Setter Target="audioPipe3.Margin" Value="0,0,0,0" />
+                        <Setter Target="audioPipe3.(RelativePanel.Below)" Value="submixNodeContainer" />
+                        <Setter Target="audioPipe3.(RelativePanel.AlignHorizontalCenterWith)" Value="submixNodeContainer" />
+                        <Setter Target="speakerContainer.Margin" Value="0,0,0,0" />
+                        <Setter Target="speakerContainer.(RelativePanel.Below)" Value="audioPipe3" />
+                        <Setter Target="speakerContainer.(RelativePanel.AlignHorizontalCenterWith)" Value="audioPipe3" />
+                        <Setter Target="graphButton.Margin" Value="0,50,0,0" />
+                        <Setter Target="graphButton.(RelativePanel.Below)" Value="speakerContainer" />
+                        <Setter Target="graphButton.(RelativePanel.AlignHorizontalCenterWith)" Value="audioPipe1" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Grid x:Name="RootGrid" Margin="12,20,12,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Margin="0,0,0,10">
+                <TextBlock Text="Description:" Style="{StaticResource SampleHeaderTextStyle}"/>
+                <TextBlock Style="{StaticResource ScenarioDescriptionTextStyle}" 
+                           TextWrapping="Wrap" 
+                           Text="This scenario reads files matching the one picked by assuming the last space separated string in the file name is a number, and by opening all files found in that pattern, then playing ALL the files." />
+                <TextBlock Name="PlayDescriptionTextBlock"  Style="{StaticResource ScenarioDescriptionTextStyle}" 
+                           TextWrapping="Wrap" 
+                           Text="Details" />
+            </StackPanel>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+                <RelativePanel HorizontalAlignment="Stretch" MinWidth="500">
+                    <!--Input-Pipe-Output-->
+                    <Button x:Name="fileButton1" Content="Load File set" Click="File1_Click" IsEnabled="False" MinWidth="120" MinHeight="45" Margin="0,20,0,0"/>
+                    <Button x:Name="fileButton2" Content="Load File 2" Click="File2_Click" IsEnabled="False" MinWidth="120" MinHeight="45" Margin="0,40,0,0"/>
+                    <Rectangle x:Name="audioPipe1" Margin="0,20,0,0" Height="10" MinWidth="120" Fill="#313131" HorizontalAlignment="Stretch">
+                        <Rectangle.RenderTransform>
+                            <TransformGroup>
+                                <RotateTransform Angle="24" />
+                                <SkewTransform AngleX="24" />
+                            </TransformGroup>
+                        </Rectangle.RenderTransform>
+                    </Rectangle>
+                    <Rectangle x:Name="audioPipe2" Margin="0,45,0,0" Height="10" MinWidth="120" Fill="#313131" HorizontalAlignment="Stretch">
+                        <Rectangle.RenderTransform>
+                            <TransformGroup>
+                                <RotateTransform Angle="-24" />
+                                <SkewTransform AngleX="-24" />
+                            </TransformGroup>
+                        </Rectangle.RenderTransform>
+                    </Rectangle>
+                    <Border x:Name="submixNodeContainer" Background="#313131" Width="160" Height="130" Margin="-10,20,0,0">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock x:Name="submixLabel" Text="SubMix Node" HorizontalAlignment="Center" Margin="0,20,0,0"/>
+                            <ToggleSwitch x:Name="echoEffectToggle" Header="Echo" IsOn="False" Toggled="EchoEffectToggle_Toggled" IsEnabled="False" Margin="40,15,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <Rectangle x:Name="audioPipe3" Fill="#313131" HorizontalAlignment="Stretch"/>
+                    <Border x:Name="speakerContainer" BorderThickness="0" Background="#4A4A4A" MinWidth="120" MinHeight="45">
+                        <TextBlock x:Name="speaker" Text="Output Device" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    </Border>
+                    <Button x:Name="graphButton" Content="Start Graph" Click="GraphButton_Click" IsEnabled="False" MinWidth="120" MinHeight="45"/>
+                </RelativePanel>
+            </ScrollViewer>
+
+            <!-- Status Block for providing messages to the user.  Use the
+             NotifyUser() method to populate the message -->
+            <Border x:Name="ErrorBorder" Background="Red" Grid.Row="2"/>
+            <TextBlock x:Name="StatusBlock" Grid.Row="2" Margin="12, 10, 12, 10" Visibility="Collapsed"/>
+        </Grid>
+    </Grid>
+</Page>

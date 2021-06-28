@@ -127,6 +127,15 @@
     <Compile Include="Scenario6_CustomEffects.xaml.cs">
       <DependentUpon>Scenario6_CustomEffects.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Scenario7_FrameInputNode.xaml.cs">
+      <DependentUpon>Scenario7_FrameInputNode.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenario8_MaxSubmix.xaml.cs">
+      <DependentUpon>Scenario8_MaxSubmix.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenario9_FrameInputNodeMC.xaml.cs">
+      <DependentUpon>Scenario9_FrameInputNodeMC.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -176,6 +185,18 @@
     </Page>
     <Page Include="$(SharedContentDir)\xaml\Styles.xaml">
       <Link>Styles\Styles.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Scenario7_FrameInputNode.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenario8_MaxSubmix.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenario9_FrameInputNodeMC.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

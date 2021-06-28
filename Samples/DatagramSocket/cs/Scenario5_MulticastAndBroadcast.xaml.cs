@@ -12,6 +12,8 @@
 using SDKTemplate;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
 using Windows.ApplicationModel.Core;
 using Windows.Networking;
 using Windows.Networking.Connectivity;
@@ -24,6 +26,14 @@ using Windows.UI.Xaml.Navigation;
 
 namespace DatagramSocketSample
 {
+    class bufferData
+    {
+        public int stringLenth;
+        public int count;
+        public int tripCounter;
+        public string messageString;
+    }
+
     /// <summary>
     /// A page for fifth scenario.
     /// </summary>
@@ -34,6 +44,12 @@ namespace DatagramSocketSample
         private MainPage rootPage = MainPage.Current;
         
         private DatagramSocket listenerSocket = null;
+
+        private Stopwatch latencySW = new Stopwatch();
+        private uint tripCounter = 0;
+        private uint byteCounter = 0;
+
+        private List<bufferData> _bufferData = new List<bufferData>();
 
         public Scenario5()
         {
@@ -75,7 +91,8 @@ namespace DatagramSocketSample
         {
             RemoteAddressLabel.Text = "Multicast Group:";
             StartListener.Content = "Start listener and join multicast group";
-            RemoteAddress.Text = "224.3.0.5";
+            //            RemoteAddress.Text = "224.3.0.5";
+            RemoteAddress.Text = "239.86.100.120";
             RemoteAddress.IsEnabled = false;
             SendMessageButton.IsEnabled = false;
             CloseListenerButton.IsEnabled = false;
@@ -213,7 +230,20 @@ namespace DatagramSocketSample
                 // this case).
                 const string stringToSend = "Hello";
                 DataWriter writer = new DataWriter(outputStream);
-                writer.WriteString(stringToSend);
+                byte[] str = Encoding.ASCII.GetBytes(stringToSend);
+                var len = str.Length;
+
+                _bufferData.Clear();
+
+                latencySW.Restart();
+
+                tripCounter = 0;
+                byteCounter = 0;
+
+                writer.WriteInt32(len);
+                writer.WriteInt32(0x8000080);
+                writer.WriteBytes(str);
+
                 await writer.StoreAsync();
 
                 SendOutput.Text = "\"" + stringToSend + "\" sent successfully.";
@@ -256,16 +286,36 @@ namespace DatagramSocketSample
         {
             try
             {
+                tripCounter++;
                 // Interpret the incoming datagram's entire contents as a string.
-                uint stringLength = eventArguments.GetDataReader().UnconsumedBufferLength;
-                string receivedMessage = eventArguments.GetDataReader().ReadString(stringLength);
+                var stringLength = eventArguments.GetDataReader().ReadInt32();
+                byteCounter += (uint)stringLength;
+
+                byte[] bytes = new byte[stringLength];
+
+                var count = eventArguments.GetDataReader().ReadInt32();
+                eventArguments.GetDataReader().ReadBytes(bytes);
+
+                string ut8String = Encoding.ASCII.GetString(bytes);
+
+                _bufferData.Add(new bufferData()
+                {
+                    count = count,
+                    stringLenth = stringLength,
+                    messageString = ut8String,
+                    tripCounter = (int)tripCounter
+                });
+
+                latencySW.Stop();
+                var ticks = latencySW.ElapsedTicks;
+                var uS = (double)ticks / (double)Stopwatch.Frequency * 1000000.0D;
 
                 NotifyUserFromAsyncThread(
-                    "Received data from remote peer (Remote Address: " +
+                    $" {tripCounter} trips, {byteCounter} bytes in {uS}uS Received data from remote peer (Remote Address: " +
                     eventArguments.RemoteAddress.CanonicalName +
                     ", Remote Port: " +
                     eventArguments.RemotePort + "): \"" +
-                     receivedMessage + "\"",
+                     ut8String + "\"",
                     NotifyType.StatusMessage);
             }
             catch (Exception exception)

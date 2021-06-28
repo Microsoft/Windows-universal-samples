@@ -1,0 +1,77 @@
+<!--
+//*********************************************************
+//
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+//*********************************************************
+-->
+<Page
+    x:Class="AudioCreation.Scenario9_FrameInputNodeMC"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AudioCreation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="audioPipe.(RelativePanel.RightOf)" Value="frameContainer" />
+                        <Setter Target="audioPipe.(RelativePanel.AlignVerticalCenterWith)" Value="frameContainer" />
+                        <Setter Target="speakerContainer.(RelativePanel.RightOf)" Value="audioPipe" />
+
+                        <Setter Target="generateButton.(RelativePanel.Below)" Value="audioPipe" />
+                        <Setter Target="generateButton.(RelativePanel.AlignHorizontalCenterWith)" Value="audioPipe" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="12,20,12,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Margin="0,0,0,10">
+                <TextBlock Text="Description:" Style="{StaticResource SampleHeaderTextStyle}"/>
+                <TextBlock Name="DetailText" Style="{StaticResource ScenarioDescriptionTextStyle}" TextWrapping="Wrap" Text="This scenario illustrates using the FrameInputNode to play audio. Audio samples are dynamically generated to fill the FrameInputNode." />
+
+                <TextBox x:Name="DesiredLatencyText" InputScope="Digits" Header="Latency mS"/>
+                <TextBox x:Name="NoteCountText" Header="#notes" InputScope="Digits" />
+                <TextBox x:Name="ChannelsPerStreamText" InputScope="Digits" Header="chan/stream"/>
+                <Button x:Name="InitNow" Content="Init" Click="InitNow_Click"/>
+            </StackPanel>
+
+            <!--Main content is scrollable-->
+            <ScrollViewer Grid.Row="1" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+                <RelativePanel HorizontalAlignment="Stretch" MinWidth="500">
+                    <!--Input-Pipe-Output-->
+
+                    <Border x:Name="frameContainer" BorderThickness="0" Background="#4A4A4A" MinWidth="120" MinHeight="45" Margin="0,20,0,0">
+                        <TextBlock x:Name="frame" Text="Frame Input" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    </Border>
+                    <Rectangle x:Name="audioPipe" Margin="0,20,0,0" Height="10" MinWidth="160" Fill="#313131" HorizontalAlignment="Stretch"/>
+                    <Border x:Name="speakerContainer" BorderThickness="0" Background="#4A4A4A" MinWidth="120" MinHeight="45" Margin="0,20,0,0">
+                        <TextBlock x:Name="speaker" Text="Output Device" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    </Border>
+                    <Button x:Name="generateButton" Content="Generate Audio" Click="Button_Click" MinWidth="120" MinHeight="45" Margin="0,50,0,0"/>
+                </RelativePanel>
+            </ScrollViewer>
+            
+            <!-- Status Block for providing messages to the user.  Use the
+             NotifyUser() method to populate the message -->
+            <TextBlock x:Name="StatusBlock" Grid.Row="2" Margin="12, 10, 12, 10" Visibility="Collapsed"/>
+        </Grid>
+    </Grid>
+</Page>

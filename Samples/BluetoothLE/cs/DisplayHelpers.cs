@@ -115,9 +115,18 @@ namespace SDKTemplate
 
         private async void UpdateGlyphBitmapImage()
         {
-            DeviceThumbnail deviceThumbnail = await DeviceInformation.GetGlyphThumbnailAsync();
             var glyphBitmapImage = new BitmapImage();
-            await glyphBitmapImage.SetSourceAsync(deviceThumbnail);
+            try
+            {
+                DeviceThumbnail deviceThumbnail = await DeviceInformation.GetGlyphThumbnailAsync();
+                await glyphBitmapImage.SetSourceAsync(deviceThumbnail);
+            }
+            catch (Exception ex)
+            {
+                // this means the device didn't have a device Glyph, which at this time I believe to be a problem with
+                // the device's package.
+                // in this case, we display a default bitmap
+            }
             GlyphBitmapImage = glyphBitmapImage;
             OnPropertyChanged("GlyphBitmapImage");
         }

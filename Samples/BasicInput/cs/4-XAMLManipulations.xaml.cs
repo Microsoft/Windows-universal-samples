@@ -20,7 +20,8 @@ namespace SDKTemplate
     public sealed partial class Scenario4 : Page
     {
         private TransformGroup transforms;
-        private MatrixTransform previousTransform;
+        private MatrixTransform previousMatrixTransform;
+        private CompositeTransform previousCompositeTransform;
         private CompositeTransform deltaTransform;
         private bool forceManipulationsToEnd;
 
@@ -46,6 +47,8 @@ namespace SDKTemplate
                 ManipulationModes.TranslateX |
                 ManipulationModes.TranslateY |
                 ManipulationModes.Rotate |
+                ManipulationModes.Scale |
+                ManipulationModes.ScaleInertia |
                 ManipulationModes.TranslateInertia |
                 ManipulationModes.RotateInertia;
         }
@@ -53,10 +56,11 @@ namespace SDKTemplate
         private void InitManipulationTransforms()
         {
             transforms = new TransformGroup();
-            previousTransform = new MatrixTransform() { Matrix = Matrix.Identity };
+            
+            previousMatrixTransform = new MatrixTransform() { Matrix = Matrix.Identity };
             deltaTransform = new CompositeTransform();
 
-            transforms.Children.Add(previousTransform);
+            transforms.Children.Add(previousMatrixTransform);
             transforms.Children.Add(deltaTransform);
 
             // Set the render transform on the rect
@@ -81,16 +85,17 @@ namespace SDKTemplate
                 return;
             }
 
-            previousTransform.Matrix = transforms.Value;
+            previousMatrixTransform.Matrix = transforms.Value;
 
             // Get center point for rotation
-            Point center = previousTransform.TransformPoint(new Point(e.Position.X, e.Position.Y));
+            Point center = previousMatrixTransform.TransformPoint(new Point(e.Position.X, e.Position.Y));
             deltaTransform.CenterX = center.X;
             deltaTransform.CenterY = center.Y;
 
             // Look at the Delta property of the ManipulationDeltaRoutedEventArgs to retrieve
             // the rotation, scale, X, and Y changes
             deltaTransform.Rotation = e.Delta.Rotation;
+            deltaTransform.ScaleX = deltaTransform.ScaleY = e.Delta.Scale;
             deltaTransform.TranslateX = e.Delta.Translation.X;
             deltaTransform.TranslateY = e.Delta.Translation.Y;
         }
